@@ -1,0 +1,23 @@
+# Banco de dados
+data_source: "user=test password=test00 dbname=test host=localhost port=5432 sslmode=disable"
+pool_min: 1
+pool_max: 1
+
+# Rest Server
+rest_server_host: ""
+rest_server_port: 4002
+
+# GRPC Server
+grpc_server_host: ""
+grpc_server_port: 50051
+
+# Api Gateway
+gateway_url: "http://localhost:3010"
+
+# Media
+media_endpoint: "localhost:9000"
+media_key: "4343434YSE4QOQUVCKPAXSSXFL"
+media_secret: "114gggcLzkwaq8vkLsNE2xhgXap1zFF7wdUCDIDAfz9D"
+
+# Logger
+logging_level: "debug"

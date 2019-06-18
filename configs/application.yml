@@ -1,0 +1,15 @@
+server:
+  port: 8001
+
+logging:
+  level:
+    root: WARN
+
+spring:
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          searchLocations: ./configs
