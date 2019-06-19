@@ -1,0 +1,26 @@
+server:
+  port: 8001
+
+security:
+  basic:
+    enabled: false
+    user: admin
+    password: admin00
+  apikey:
+    enabled: true
+    token: 9a0697eb595309177ff10336f2801b5861833ac36315b7bbda3fd2e1619797d9
+
+logging:
+  level:
+    root: WARN
+
+spring:
+  profiles:
+    active: git
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/helderfarias/go-config-server-examples
+          clone_dir: ./tmp
+          force_pull: true

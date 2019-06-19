@@ -8,42 +8,51 @@ import (
 )
 
 type DriveNativeFactory interface {
-	BuildProperySources() []domain.PropertySource
+	Build() *domain.BuildSource
 }
 
 type emptyDriveNative struct {
 }
 
-func NewDriveNativeFactory(cloud domain.SpringCloudConfig, application, profile string) DriveNativeFactory {
-	actives := strings.Split(cloud.Spring.Profiles.Active, ",")
+func NewDriveNativeFactory(cfg domain.EnvConfig) DriveNativeFactory {
+	actives := strings.Split(cfg.Cloud.Spring.Profiles.Active, ",")
 	if isDriveInvalid(actives) {
 		log.Println("Profile is not defined:", actives)
 		return &emptyDriveNative{}
 	}
 
-	searchLocations := cloud.Spring.Cloud.Config.Server.Native["searchLocations"]
-	if searchLocations == nil {
-		return &emptyDriveNative{}
+	if actives[0] == "native" {
+		return &fileDriveNative{
+			source:      cfg.Cloud.Spring.Cloud.Config.Server.Native,
+			application: cfg.Application,
+			profile:     cfg.Profile,
+			label:     	 cfg.Label,
+		}
 	}
 
-	return &fileDriveNative{
-		searchLocations: searchLocations.(string),
-		application:     application,
-		profile:         profile,
+	if actives[0] == "git" {
+		return &gitDriveNative{
+			source:      cfg.Cloud.Spring.Cloud.Config.Server.Git,
+			application: cfg.Application,
+			profile:     cfg.Profile,
+			label:     	 cfg.Label,
+		}
 	}
+
+	return &emptyDriveNative{}
 }
 
-func (e *emptyDriveNative) BuildProperySources() []domain.PropertySource {
-	return []domain.PropertySource{}
+func (e *emptyDriveNative) Build() *domain.BuildSource {
+	return domain.NewBuildSource()
 }
 
 func isDriveInvalid(actives []string) bool {
 	for _, s := range actives {
-		if strings.TrimSpace(s) == strings.TrimSpace("dev") ||
+		if strings.TrimSpace(s) == strings.TrimSpace("native") ||
 			strings.TrimSpace(s) == strings.TrimSpace("git") {
-			return true
+			return false
 		}
 	}
 
-	return false
+	return true
 }

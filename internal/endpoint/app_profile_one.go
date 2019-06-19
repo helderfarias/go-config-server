@@ -20,14 +20,20 @@ func (*Api) ApplicationProfileOne(c echo.Context) error {
 
 	cloud := c.Get("cloudConfig").(domain.SpringCloudConfig)
 
-	driver := service.NewDriveNativeFactory(cloud, c.Param("application"), c.Param("profile"))
+	driver := service.NewDriveNativeFactory(domain.EnvConfig{
+		Cloud:       cloud,
+		Application: c.Param("application"),
+		Profile:     c.Param("profile"),
+		Label:       c.Param("label"),
+	})
 
-	sources := driver.BuildProperySources()
+	build := driver.Build()
 
 	return c.JSON(http.StatusOK, domain.ProfileConfig{
 		Name:            null.StringFrom(c.Param("application")),
 		Profiles:        []string{c.Param("profile")},
 		Label:           null.StringFrom(c.Param("label")),
-		PropertySources: sources,
+		Version:         null.StringFrom(build.Options["version"]),
+		PropertySources: build.Properties,
 	})
 }

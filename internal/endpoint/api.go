@@ -12,4 +12,6 @@ func Register(e *echo.Echo) {
 	e.GET("/:application/:profile", api.ApplicationProfileOne)
 	e.GET("/:application/:profile/:label", api.ApplicationProfileOne)
 	e.GET("/:application_profile", api.ApplicationProfileTwo)
+	e.POST("/encrypt", api.Encrypt)
+	e.POST("/decrypt", api.Decrypt)
 }

@@ -29,13 +29,20 @@ func (*Api) ApplicationProfileTwo(c echo.Context) error {
 
 	cloud := c.Get("cloudConfig").(domain.SpringCloudConfig)
 
-	driver := service.NewDriveNativeFactory(cloud, applicationProfile[0], applicationProfile[1])
+	driver := service.NewDriveNativeFactory(domain.EnvConfig{
+		Cloud:       cloud,
+		Application: applicationProfile[0],
+		Profile:     applicationProfile[1],
+		Label:       c.Param("label"),
+	})
 
-	sources := driver.BuildProperySources()
+	build := driver.Build()
 
 	return c.JSON(http.StatusOK, domain.ProfileConfig{
 		Name:            null.StringFrom(applicationProfile[0]),
 		Profiles:        []string{applicationProfile[1]},
-		PropertySources: sources,
+		Label:           null.StringFrom(c.Param("label")),
+		Version:         null.StringFrom(build.Options["version"]),
+		PropertySources: build.Properties,
 	})
 }

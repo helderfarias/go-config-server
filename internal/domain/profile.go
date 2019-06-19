@@ -1,9 +1,6 @@
 package domain
 
 import (
-	"fmt"
-	"path/filepath"
-
 	"github.com/guregu/null"
 )
 
@@ -24,15 +21,4 @@ type PropertySource struct {
 type FileResolver struct {
 	Name     string
 	Absolute string
-}
-
-func (p *ProfileConfig) MakeFileName(searchLocation string) (FileResolver, error) {
-	name := fmt.Sprintf("%s/%s-%s.yml", searchLocation, p.Name.String, p.Profiles[0])
-
-	content, err := filepath.Abs(name)
-	if err != nil {
-		return FileResolver{}, err
-	}
-
-	return FileResolver{Name: name, Absolute: content}, nil
 }
