@@ -1,5 +1,5 @@
 server:
-  port: 8001
+  port: 3005
 
 security:
   basic:
@@ -12,11 +12,6 @@ security:
 
 encrypt:
   key: secretkey
-  # key_store:
-  #   location: server.jks
-  #   password: letmein
-  #   alias: mytestkey
-  #   secret: changeme
 
 logging:
   level:

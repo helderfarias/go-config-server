@@ -1,5 +1,5 @@
 # Banco de dados
-data_source: "user=test password=test00 dbname=test host=localhost port=5432 sslmode=disable"
+data_source: "{cipher}ddab4a2c95293a70c2414da47c0fdf3b2a8b54dc0c293bfab84e3ed770c9efa0495bb8851d6a41f6476398081d7d9b3d009ce1ce11171162b75b3e6868bd7728751e9426cc61a52c7d57a792ca042b7e386fd515289b78ff08003a8d9fb83e30f008742e8e31cca440b4"
 pool_min: 1
 pool_max: 1
 

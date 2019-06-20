@@ -1,12 +1,9 @@
 package service
 
 import (
-	"crypto/aes"
-	"crypto/cipher"
-	"crypto/md5"
-	"crypto/rand"
-	"encoding/hex"
-	"io"
+	"errors"
+
+	"github.com/helderfarias/go-config-server/internal/domain"
 )
 
 type CryptService interface {
@@ -15,61 +12,23 @@ type CryptService interface {
 	Decrypt(source string) ([]byte, error)
 }
 
-type cryptService struct {
-	masterKey string
+type cryptServiceEmpty struct {
 }
 
-func NewCryptService(key string) *cryptService {
-	return &cryptService{
-		masterKey: key,
+func NewCryptServiceFactory(cfg domain.EnvConfig) CryptService {
+	if cfg.Cloud.Encrypt.Key != "" {
+		return &cryptServiceDefault{
+			masterKey: cfg.Cloud.Encrypt.Key,
+		}
 	}
+
+	return &cryptServiceEmpty{}
 }
 
-func (e *cryptService) Encrypt(data []byte) ([]byte, error) {
-	block, _ := aes.NewCipher([]byte(e.createHash(e.masterKey)))
-	gcm, err := cipher.NewGCM(block)
-	if err != nil {
-		return nil, err
-	}
-
-	nonce := make([]byte, gcm.NonceSize())
-	if _, err = io.ReadFull(rand.Reader, nonce); err != nil {
-		return nil, err
-	}
-
-	ciphertext := gcm.Seal(nonce, nonce, data, nil)
-	return ciphertext, err
+func (e *cryptServiceEmpty) Encrypt(data []byte) ([]byte, error) {
+	return nil, errors.New("Encrypt is not enabled")
 }
 
-func (e *cryptService) Decrypt(source string) ([]byte, error) {
-	data, err := hex.DecodeString(source)
-	if err != nil {
-		return nil, err
-	}
-
-	key := []byte(e.createHash(e.masterKey))
-	block, err := aes.NewCipher(key)
-	if err != nil {
-		return nil, err
-	}
-
-	gcm, err := cipher.NewGCM(block)
-	if err != nil {
-		return nil, err
-	}
-
-	nonceSize := gcm.NonceSize()
-	nonce, ciphertext := data[:nonceSize], data[nonceSize:]
-	plaintext, err := gcm.Open(nil, nonce, ciphertext, nil)
-	if err != nil {
-		return nil, err
-	}
-
-	return plaintext, err
-}
-
-func (e *cryptService) createHash(key string) string {
-	hasher := md5.New()
-	hasher.Write([]byte(key))
-	return hex.EncodeToString(hasher.Sum(nil))
+func (e *cryptServiceEmpty) Decrypt(source string) ([]byte, error) {
+	return nil, errors.New("Encrypt is not enabled")
 }

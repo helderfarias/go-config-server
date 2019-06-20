@@ -23,7 +23,9 @@ func (*Api) Encrypt(c echo.Context) error {
 
 	cloud := c.Get("cloudConfig").(domain.SpringCloudConfig)
 
-	srv := service.NewCryptService(cloud.Encrypt.Key)
+	srv := service.NewCryptServiceFactory(domain.EnvConfig{
+		Cloud: cloud,
+	})
 
 	content, err := srv.Encrypt(body)
 	if err != nil {

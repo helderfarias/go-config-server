@@ -9,9 +9,8 @@ type Api struct {
 
 func Register(e *echo.Echo) {
 	api := Api{}
-	e.GET("/:application/:profile", api.ApplicationProfileOne)
-	e.GET("/:application/:profile/:label", api.ApplicationProfileOne)
-	e.GET("/:application_profile", api.ApplicationProfileTwo)
+	e.GET("/:application/:profile", api.ApplicationProfile)
+	e.GET("/:application/:profile/:label", api.ApplicationProfile)
 	e.POST("/encrypt", api.Encrypt)
 	e.POST("/decrypt", api.Decrypt)
 }

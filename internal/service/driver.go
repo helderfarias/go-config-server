@@ -21,21 +21,25 @@ func NewDriveNativeFactory(cfg domain.EnvConfig) DriveNativeFactory {
 		return &emptyDriveNative{}
 	}
 
+	cryptService := NewCryptServiceFactory(cfg)
+
 	if actives[0] == "native" {
 		return &fileDriveNative{
-			source:      cfg.Cloud.Spring.Cloud.Config.Server.Native,
-			application: cfg.Application,
-			profile:     cfg.Profile,
-			label:     	 cfg.Label,
+			source:       cfg.Cloud.Spring.Cloud.Config.Server.Native,
+			application:  cfg.Application,
+			profile:      cfg.Profile,
+			label:        cfg.Label,
+			cryptService: cryptService,
 		}
 	}
 
 	if actives[0] == "git" {
 		return &gitDriveNative{
-			source:      cfg.Cloud.Spring.Cloud.Config.Server.Git,
-			application: cfg.Application,
-			profile:     cfg.Profile,
-			label:     	 cfg.Label,
+			source:       cfg.Cloud.Spring.Cloud.Config.Server.Git,
+			application:  cfg.Application,
+			profile:      cfg.Profile,
+			label:        cfg.Label,
+			cryptService: cryptService,
 		}
 	}
 

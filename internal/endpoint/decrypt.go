@@ -1,7 +1,6 @@
 package endpoint
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 
@@ -22,12 +21,14 @@ func (*Api) Decrypt(c echo.Context) error {
 
 	cloud := c.Get("cloudConfig").(domain.SpringCloudConfig)
 
-	srv := service.NewCryptService(cloud.Encrypt.Key)
+	srv := service.NewCryptServiceFactory(domain.EnvConfig{
+		Cloud: cloud,
+	})
 
 	content, err := srv.Decrypt(string(body))
 	if err != nil {
 		return nil
 	}
 
-	return c.String(http.StatusOK, fmt.Sprintf("%s", content))
+	return c.String(http.StatusOK, string(content))
 }
