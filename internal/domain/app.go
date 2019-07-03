@@ -2,7 +2,8 @@ package domain
 
 type SpringCloudConfig struct {
 	Server struct {
-		Port int `yml:"port"`
+		Host string `yml:"host"`
+		Port int    `yml:"port"`
 	} `yml:"server"`
 
 	Security struct {
@@ -39,5 +40,15 @@ type SpringCloudConfig struct {
 				} `yml:"server"`
 			} `yml:"cloud"`
 		} `yml:"cloud"`
+		Nats struct {
+			Servers string `yml:"servers"`
+			Subject string `yml:"subject"`
+			Auth    struct {
+				Type     string `yml:"type"`
+				Token    string `yml:"token"`
+				User     string `yml:"user"`
+				Password string `yml:"password"`
+			} `yml:"auth"`
+		} `yml:"profiles"`
 	} `yml:"spring"`
 }

@@ -7,6 +7,9 @@ require (
 	github.com/guregu/null v3.4.0+incompatible
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/gommon v0.2.9 // indirect
+	github.com/nats-io/nats.go v1.8.1
+	github.com/sirupsen/logrus v1.4.2
+	github.com/stretchr/testify v1.3.0
 	golang.org/x/crypto v0.0.0-20190617133340-57b3e21c3d56 // indirect
 	gopkg.in/src-d/go-git.v4 v4.12.0
 	gopkg.in/yaml.v2 v2.2.2

@@ -13,12 +13,11 @@ import (
 	mwi "github.com/helderfarias/go-config-server/internal/middleware"
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
+	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 )
 
 func main() {
-	httpAddr := flag.String("addr", "", "HTTP Listen Address")
-	httpPort := flag.String("port", "3005", "HTTP Listen Port")
 	appConfig := flag.String("config", "./configs/application.yml", "Aplication configs")
 	flag.Parse()
 
@@ -26,6 +25,8 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	setLoggerLevel(cfg.Logging.Level.Root)
 
 	e := echo.New()
 	e.Use(middleware.Logger())
@@ -36,9 +37,9 @@ func main() {
 	e.Use(mwi.AuthBasic(cfg))
 	e.Use(mwi.AuthApiKey(cfg))
 
-	endpoint.Register(e)
+	endpoint.Register(e, cfg)
 
-	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%s", *httpAddr, *httpPort)))
+	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)))
 }
 
 func load(configFileName string) (domain.SpringCloudConfig, error) {
@@ -63,4 +64,17 @@ func load(configFileName string) (domain.SpringCloudConfig, error) {
 	}
 
 	return cloudConfig, nil
+}
+
+func setLoggerLevel(src string) {
+	if level, err := logrus.ParseLevel(src); err == nil {
+		logrus.SetLevel(level)
+	} else {
+		logrus.SetLevel(logrus.ErrorLevel)
+	}
+
+	logrus.SetFormatter(&logrus.TextFormatter{
+		TimestampFormat: "2006-01-02T15:04:05.000",
+		FullTimestamp:   true,
+	})
 }
