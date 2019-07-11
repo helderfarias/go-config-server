@@ -16,6 +16,7 @@ type gitDriveNative struct {
 	application  string
 	profile      string
 	label        string
+	index        int
 	cryptService CryptService
 }
 
@@ -55,6 +56,7 @@ func (e *gitDriveNative) Build() *domain.BuildSource {
 		AddProperty(domain.PropertySource{
 			Name:   e.source["uri"].(string),
 			Source: source,
+			Index:  e.index,
 		})
 }
 

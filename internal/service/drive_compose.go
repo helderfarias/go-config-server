@@ -19,7 +19,11 @@ func (e *composeDriveNative) Build() *domain.BuildSource {
 	for _, d := range e.targets {
 		result := d.Build()
 		if len(result.Properties) > 0 {
-			data.AddProperty(result.Properties[0])
+			data.AddProperty(domain.PropertySource{
+				Name:   result.Properties[0].Name,
+				Index:  result.Properties[0].Index,
+				Source: result.Properties[0].Source,
+			})
 		}
 
 		if len(result.Options) > 0 {

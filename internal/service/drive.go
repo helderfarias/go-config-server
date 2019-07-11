@@ -57,6 +57,7 @@ func createComposeDrive(actives []string, cfg domain.EnvConfig) DriveNativeFacto
 	for i := len(actives) - 1; i >= 0; i-- {
 		if strings.TrimSpace(actives[i]) == "native" {
 			compose.Add(&fileDriveNative{
+				index:        i,
 				source:       cfg.Cloud.Spring.Cloud.Config.Server.Native,
 				application:  cfg.Application,
 				profile:      cfg.Profile,
@@ -65,6 +66,7 @@ func createComposeDrive(actives []string, cfg domain.EnvConfig) DriveNativeFacto
 			})
 		} else if strings.TrimSpace(actives[i]) == "git" {
 			compose.Add(&gitDriveNative{
+				index:        i,
 				source:       cfg.Cloud.Spring.Cloud.Config.Server.Git,
 				application:  cfg.Application,
 				profile:      cfg.Profile,

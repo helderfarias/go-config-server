@@ -12,6 +12,7 @@ type fileDriveNative struct {
 	application  string
 	profile      string
 	label        string
+	index        int
 	cryptService CryptService
 }
 
@@ -40,6 +41,7 @@ func (e *fileDriveNative) Build() *domain.BuildSource {
 		AddProperty(domain.PropertySource{
 			Name:   name,
 			Source: source,
+			Index:  e.index,
 		})
 }
 

@@ -15,6 +15,7 @@ type ProfileConfig struct {
 
 type PropertySource struct {
 	Name   string                 `json:"name"`
+	Index  int                    `json:"index"`
 	Source map[string]interface{} `json:"source"`
 }
 
