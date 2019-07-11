@@ -2,10 +2,10 @@ package service
 
 import (
 	"fmt"
-	"log"
 	"strings"
 
 	"github.com/helderfarias/go-config-server/internal/domain"
+	"github.com/sirupsen/logrus"
 	"gopkg.in/src-d/go-git.v4"
 	"gopkg.in/src-d/go-git.v4/plumbing"
 	"gopkg.in/src-d/go-git.v4/plumbing/transport/http"
@@ -22,21 +22,21 @@ type gitDriveNative struct {
 func (e *gitDriveNative) Build() *domain.BuildSource {
 	directory, repo, err := e.clone()
 	if err != nil {
-		log.Println(err)
+		logrus.Error(err)
 		return domain.NewBuildSource()
 	}
 
 	resolver := newResolverFile(directory, e.application, e.profile)
 
-	name, data, err := resolver.decode()
+	_, data, err := resolver.decode()
 	if err != nil {
-		log.Println(err)
+		logrus.Error(err)
 		return domain.NewBuildSource()
 	}
 
 	head, err := repo.Head()
 	if err != nil {
-		log.Println(err)
+		logrus.Error(err)
 		return domain.NewBuildSource()
 	}
 
@@ -53,7 +53,7 @@ func (e *gitDriveNative) Build() *domain.BuildSource {
 	return domain.NewBuildSource().
 		AddOption("version", fmt.Sprintf("%s", head.Hash())).
 		AddProperty(domain.PropertySource{
-			Name:   name,
+			Name:   e.source["uri"].(string),
 			Source: source,
 		})
 }
@@ -64,7 +64,7 @@ func (e *gitDriveNative) eval(source string) string {
 		content = strings.ReplaceAll(content, "\"", "")
 		decoded, err := e.cryptService.Decrypt(content)
 		if err != nil {
-			log.Println(err)
+			logrus.Error(err)
 			return source
 		}
 		return string(decoded)
@@ -99,6 +99,10 @@ func (e *gitDriveNative) clone() (string, *git.Repository, error) {
 
 	if err == git.ErrRepositoryAlreadyExists {
 		repo, err := git.PlainOpen(directory)
+		if err != nil {
+			return directory, repo, err
+		}
+
 		repo, err = e.forcePullIf(repo)
 		return directory, repo, err
 	}

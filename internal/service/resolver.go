@@ -3,9 +3,9 @@ package service
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"path/filepath"
 
+	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
 )
 
@@ -26,19 +26,19 @@ func newResolverFile(location, application, profile string) *resolverFile {
 func (d *resolverFile) decode() (string, map[string]interface{}, error) {
 	name, absolute, err := d.getFileName()
 	if err != nil {
-		log.Println(err)
+		logrus.Error(err)
 		return "", nil, err
 	}
 
 	content, err := ioutil.ReadFile(absolute)
 	if err != nil {
-		log.Println(err)
+		logrus.Error(err)
 		return "", nil, err
 	}
 
 	source := map[string]interface{}{}
 	if err := yaml.Unmarshal(content, &source); err != nil {
-		log.Println(err)
+		logrus.Error(err)
 		return "", nil, err
 	}
 

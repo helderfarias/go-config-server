@@ -1,10 +1,10 @@
 package service
 
 import (
-	"log"
 	"strings"
 
 	"github.com/helderfarias/go-config-server/internal/domain"
+	"github.com/sirupsen/logrus"
 )
 
 type fileDriveNative struct {
@@ -22,7 +22,7 @@ func (e *fileDriveNative) Build() *domain.BuildSource {
 
 	name, data, err := resolver.decode()
 	if err != nil {
-		log.Println(err)
+		logrus.Error(err)
 		return &domain.BuildSource{}
 	}
 
@@ -49,7 +49,7 @@ func (e *fileDriveNative) eval(source string) string {
 		content = strings.ReplaceAll(content, "\"", "")
 		decoded, err := e.cryptService.Decrypt(content)
 		if err != nil {
-			log.Println(err)
+			logrus.Error(err)
 			return source
 		}
 		return string(decoded)

@@ -32,7 +32,6 @@ func main() {
 	e.Server.Addr = fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-	e.Use(mwi.SetCloudConfig(cfg))
 	e.Use(mwi.AuthBasic(cfg))
 	e.Use(mwi.AuthApiKey(cfg))
 

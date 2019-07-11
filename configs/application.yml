@@ -20,12 +20,17 @@ logging:
 
 spring:
   profiles:
-    active: native
+    active: native, git
   cloud:
     config:
       server:
         native:
           searchLocations: ./configs
+        git:
+          uri: https://github.com/helderfarias/go-config-server-examples
+          clone_dir: ./tmp
+          force_pull: true
+
   nats:
     servers: nats://localhost:4222
     subject: springCloudBus
