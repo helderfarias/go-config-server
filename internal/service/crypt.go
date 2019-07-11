@@ -15,7 +15,7 @@ type CryptService interface {
 type cryptServiceEmpty struct {
 }
 
-func NewCryptServiceFactory(cfg domain.EnvConfig) CryptService {
+func newCryptService(cfg domain.EnvConfig) CryptService {
 	if cfg.Cloud.Encrypt.Key != "" {
 		return &cryptServiceDefault{
 			masterKey: cfg.Cloud.Encrypt.Key,

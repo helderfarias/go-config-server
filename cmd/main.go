@@ -7,13 +7,15 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"time"
 
 	"github.com/helderfarias/go-config-server/internal/domain"
 	"github.com/helderfarias/go-config-server/internal/endpoint"
 	mwi "github.com/helderfarias/go-config-server/internal/middleware"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
+	"github.com/tylerb/graceful"
 	"gopkg.in/yaml.v2"
 )
 
@@ -26,20 +28,21 @@ func main() {
 		log.Fatal(err)
 	}
 
-	setLoggerLevel(cfg.Logging.Level.Root)
-
 	e := echo.New()
+	e.Server.Addr = fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
-	e.Use(middleware.CORS())
-	e.Use(middleware.Secure())
 	e.Use(mwi.SetCloudConfig(cfg))
 	e.Use(mwi.AuthBasic(cfg))
 	e.Use(mwi.AuthApiKey(cfg))
 
+	logrus.Infof("⇨ http server started on %s\n", e.Server.Addr)
+
+	setLoggerLevel(cfg.Logging.Level.Root)
+
 	endpoint.Register(e, cfg)
 
-	e.Logger.Fatal(e.Start(fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)))
+	logrus.Fatal(graceful.ListenAndServe(e.Server, 5*time.Second))
 }
 
 func load(configFileName string) (domain.SpringCloudConfig, error) {

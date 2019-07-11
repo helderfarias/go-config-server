@@ -7,26 +7,11 @@ import (
 	"testing"
 
 	"github.com/helderfarias/go-config-server/internal/domain"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
 
-type MockMessageBroker struct {
-	Message string
-}
-
-func (m *MockMessageBroker) Publish(msg string) error {
-	m.Message = msg
-	return nil
-}
-
 func TestMonitorRefreshToken(t *testing.T) {
-	mockBroker := &MockMessageBroker{}
-
-	api := Api{
-		messageBroker: mockBroker,
-	}
-
 	event := `{"commits": [{"modified": ["accountservice.yml"]}],"name":"what is this?"}`
 
 	e := echo.New()

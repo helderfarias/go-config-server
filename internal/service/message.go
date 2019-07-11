@@ -19,7 +19,7 @@ type natsMessageBroker struct {
 type emptyMessageBroker struct {
 }
 
-func NewFactoryMessageBroker(cfg domain.SpringCloudConfig) MessageBroker {
+func newFactoryMessageBroker(cfg domain.SpringCloudConfig) MessageBroker {
 	if strings.TrimSpace(cfg.Spring.Nats.Servers) != "" {
 		return &natsMessageBroker{cfg: cfg}
 	}

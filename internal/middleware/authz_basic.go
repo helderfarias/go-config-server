@@ -2,8 +2,8 @@ package middleware
 
 import (
 	"github.com/helderfarias/go-config-server/internal/domain"
-	"github.com/labstack/echo"
-	"github.com/labstack/echo/middleware"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 )
 
 func AuthBasic(cfg domain.SpringCloudConfig) echo.MiddlewareFunc {

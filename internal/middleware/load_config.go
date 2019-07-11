@@ -2,7 +2,7 @@ package middleware
 
 import (
 	"github.com/helderfarias/go-config-server/internal/domain"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 func SetCloudConfig(cloudConfig domain.SpringCloudConfig) echo.MiddlewareFunc {

@@ -5,29 +5,18 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/helderfarias/go-config-server/internal/domain"
-	"github.com/helderfarias/go-config-server/internal/service"
-
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
-func (*Api) Encrypt(c echo.Context) error {
-	if c.Get("cloudConfig") == nil {
-		return c.String(http.StatusOK, "")
-	}
-
+func (a *Api) Encrypt(c echo.Context) error {
 	body, err := ioutil.ReadAll(c.Request().Body)
 	if err != nil {
 		return nil
 	}
 
-	cloud := c.Get("cloudConfig").(domain.SpringCloudConfig)
+	service := a.serviceFactory.NewCryptService()
 
-	srv := service.NewCryptServiceFactory(domain.EnvConfig{
-		Cloud: cloud,
-	})
-
-	content, err := srv.Encrypt(body)
+	content, err := service.Encrypt(body)
 	if err != nil {
 		return nil
 	}

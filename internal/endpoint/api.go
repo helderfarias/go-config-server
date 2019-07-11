@@ -3,16 +3,16 @@ package endpoint
 import (
 	"github.com/helderfarias/go-config-server/internal/domain"
 	"github.com/helderfarias/go-config-server/internal/service"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 )
 
 type Api struct {
-	messageBroker service.MessageBroker
+	serviceFactory service.Factory
 }
 
 func Register(e *echo.Echo, cfg domain.SpringCloudConfig) {
 	api := Api{
-		messageBroker: service.NewFactoryMessageBroker(cfg),
+		serviceFactory: service.NewServiceFactory(cfg),
 	}
 
 	e.GET("/:application/:profile", api.ApplicationProfile)

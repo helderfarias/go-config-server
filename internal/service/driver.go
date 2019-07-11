@@ -14,14 +14,14 @@ type DriveNativeFactory interface {
 type emptyDriveNative struct {
 }
 
-func NewDriveNativeFactory(cfg domain.EnvConfig) DriveNativeFactory {
+func newDriveNative(cfg domain.EnvConfig) DriveNativeFactory {
 	actives := strings.Split(cfg.Cloud.Spring.Profiles.Active, ",")
 	if isDriveInvalid(actives) {
 		log.Println("Profile is not defined:", actives)
 		return &emptyDriveNative{}
 	}
 
-	cryptService := NewCryptServiceFactory(cfg)
+	cryptService := newCryptService(cfg)
 
 	if actives[0] == "native" {
 		return &fileDriveNative{

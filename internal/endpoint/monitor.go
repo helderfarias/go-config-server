@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/helderfarias/go-config-server/internal/domain"
-	"github.com/labstack/echo"
+	"github.com/labstack/echo/v4"
 	"github.com/sirupsen/logrus"
 )
 
@@ -27,7 +27,9 @@ func (a *Api) MonitorRefreshToken(c echo.Context) error {
 		}
 	}
 
-	if err := a.messageBroker.Publish(target); err != nil {
+	broker := a.serviceFactory.NewMessageBroker()
+
+	if err := broker.Publish(target); err != nil {
 		return err
 	}
 
