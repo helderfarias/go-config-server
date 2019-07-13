@@ -39,13 +39,13 @@ func (e *vaultDriveNative) Build() *domain.BuildSource {
 		return domain.NewBuildSource()
 	}
 
-	if secretValues == nil || secretValues.Data == nil{
+	if secretValues == nil || secretValues.Data == nil {
 		return domain.NewBuildSource()
 	}
 
-	source := map[string]interface{}{}
+	data := map[string]interface{}{}
 	if value := secretValues.Data["data"]; value != nil {
-		source = value.(map[string]interface{})
+		data = value.(map[string]interface{})
 	}
 
 	metadata := map[string]interface{}{}
@@ -57,6 +57,8 @@ func (e *vaultDriveNative) Build() *domain.BuildSource {
 	name = strings.Replace(name, "http", "vault", 1)
 	name = strings.Replace(name, "https", "vault(s)", 1)
 
+	parse := newParseExpression(data, e.cryptService)
+	source := parse.eval()
 	return domain.NewBuildSource().
 		AddOption("version", fmt.Sprintf("%v", metadata["version"])).
 		AddProperty(domain.PropertySource{

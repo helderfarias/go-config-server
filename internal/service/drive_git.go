@@ -27,7 +27,7 @@ func (e *gitDriveNative) Build() *domain.BuildSource {
 		return domain.NewBuildSource()
 	}
 
-	resolver := newResolverFile(directory, e.application, e.profile)
+	resolver := newResolveFile(directory, e.application, e.profile)
 
 	_, data, err := resolver.decode()
 	if err != nil {
@@ -41,16 +41,8 @@ func (e *gitDriveNative) Build() *domain.BuildSource {
 		return domain.NewBuildSource()
 	}
 
-	source := map[string]interface{}{}
-	for key, value := range data {
-		switch value.(type) {
-		case string:
-			source[key] = e.eval(value.(string))
-		default:
-			source[key] = value
-		}
-	}
-
+	parse := newParseExpression(data, e.cryptService)
+	source := parse.eval()
 	return domain.NewBuildSource().
 		AddOption("version", fmt.Sprintf("%s", head.Hash())).
 		AddProperty(domain.PropertySource{
@@ -58,21 +50,6 @@ func (e *gitDriveNative) Build() *domain.BuildSource {
 			Source: source,
 			Index:  e.index,
 		})
-}
-
-func (e *gitDriveNative) eval(source string) string {
-	if strings.HasPrefix(source, "{cipher}") {
-		content := strings.ReplaceAll(source, "{cipher}", "")
-		content = strings.ReplaceAll(content, "\"", "")
-		decoded, err := e.cryptService.Decrypt(content)
-		if err != nil {
-			logrus.Error(err)
-			return source
-		}
-		return string(decoded)
-	}
-
-	return source
 }
 
 func (e *gitDriveNative) clone() (string, *git.Repository, error) {

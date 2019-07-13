@@ -9,21 +9,21 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
-type resolverFile struct {
+type resolveFile struct {
 	location    string
 	application string
 	profile     string
 }
 
-func newResolverFile(location, application, profile string) *resolverFile {
-	return &resolverFile{
+func newResolveFile(location, application, profile string) *resolveFile {
+	return &resolveFile{
 		location:    location,
 		application: application,
 		profile:     profile,
 	}
 }
 
-func (d *resolverFile) decode() (string, map[string]interface{}, error) {
+func (d *resolveFile) decode() (string, map[string]interface{}, error) {
 	name, absolute, err := d.getFileName()
 	if err != nil {
 		logrus.Error(err)
@@ -45,7 +45,7 @@ func (d *resolverFile) decode() (string, map[string]interface{}, error) {
 	return name, source, nil
 }
 
-func (d *resolverFile) getFileName() (string, string, error) {
+func (d *resolveFile) getFileName() (string, string, error) {
 	name := fmt.Sprintf("%s/%s-%s.yml", d.location, d.application, d.profile)
 
 	content, err := filepath.Abs(name)
