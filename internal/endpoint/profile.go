@@ -13,6 +13,7 @@ func (a *Api) ApplicationProfile(c echo.Context) error {
 		Application: c.Param("application"),
 		Profile:     c.Param("profile"),
 		Label:       c.Param("label"),
+		VaultToken:  c.Request().Header.Get("vault_token"),
 	})
 
 	build := driver.Build()

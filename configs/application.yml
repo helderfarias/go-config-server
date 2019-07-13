@@ -20,7 +20,7 @@ logging:
 
 spring:
   profiles:
-    active: native, git
+    active: native, git, vault
   cloud:
     config:
       server:
@@ -30,7 +30,8 @@ spring:
           uri: https://github.com/helderfarias/go-config-server-examples
           clone_dir: ./tmp
           force_pull: true
-
+        vault:
+          uri: http://localhost:8200
   nats:
     servers: nats://localhost:4222
     subject: springCloudBus

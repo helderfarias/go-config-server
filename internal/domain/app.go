@@ -37,6 +37,7 @@ type SpringCloudConfig struct {
 				Server struct {
 					Native map[string]interface{} `yml:"native"`
 					Git    map[string]interface{} `yml:"git"`
+					Vault  map[string]interface{} `yml:"vault"`
 				} `yml:"server"`
 			} `yml:"cloud"`
 		} `yml:"cloud"`

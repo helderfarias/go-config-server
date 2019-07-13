@@ -5,4 +5,5 @@ type EnvConfig struct {
 	Application string
 	Profile     string
 	Label       string
+	VaultToken  string
 }

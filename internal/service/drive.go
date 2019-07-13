@@ -41,7 +41,8 @@ func (e *emptyDriveNative) Build() *domain.BuildSource {
 func isDriveInvalid(actives []string) bool {
 	for _, s := range actives {
 		if strings.TrimSpace(s) == strings.TrimSpace("native") ||
-			strings.TrimSpace(s) == strings.TrimSpace("git") {
+			strings.TrimSpace(s) == strings.TrimSpace("git") ||
+			strings.TrimSpace(s) == strings.TrimSpace("vault") {
 			return false
 		}
 	}
@@ -55,19 +56,29 @@ func createComposeDrive(actives []string, cfg domain.EnvConfig) DriveNativeFacto
 	}
 
 	for i := len(actives) - 1; i >= 0; i-- {
-		if strings.TrimSpace(actives[i]) == "native" {
-			compose.Add(&fileDriveNative{
+		if strings.TrimSpace(actives[i]) == "vault" {
+			compose.Add(&vaultDriveNative{
 				index:        i,
-				source:       cfg.Cloud.Spring.Cloud.Config.Server.Native,
+				source:       cfg.Cloud.Spring.Cloud.Config.Server.Vault,
 				application:  cfg.Application,
 				profile:      cfg.Profile,
 				label:        cfg.Label,
+				vaultToken:   cfg.VaultToken,
 				cryptService: newCryptService(cfg),
 			})
 		} else if strings.TrimSpace(actives[i]) == "git" {
 			compose.Add(&gitDriveNative{
 				index:        i,
 				source:       cfg.Cloud.Spring.Cloud.Config.Server.Git,
+				application:  cfg.Application,
+				profile:      cfg.Profile,
+				label:        cfg.Label,
+				cryptService: newCryptService(cfg),
+			})
+		} else if strings.TrimSpace(actives[i]) == "native" {
+			compose.Add(&fileDriveNative{
+				index:        i,
+				source:       cfg.Cloud.Spring.Cloud.Config.Server.Native,
 				application:  cfg.Application,
 				profile:      cfg.Profile,
 				label:        cfg.Label,

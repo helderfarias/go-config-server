@@ -47,3 +47,13 @@ func TestShouldEmptyDriveWhenEmptyActives(t *testing.T) {
 
 	assert.IsType(t, &emptyDriveNative{}, result)
 }
+
+func TestShouldCreateDriveVaultWhenActiveVault(t *testing.T) {
+	c := domain.EnvConfig{}
+	c.Cloud.Spring.Profiles.Active = "vault"
+
+	result := newDriveNative(c)
+
+	assert.Equal(t, 1, len(result.(*composeDriveNative).targets))
+	assert.IsType(t, &vaultDriveNative{}, result.(*composeDriveNative).targets[0])
+}

@@ -24,6 +24,7 @@ func (s *serviceFactory) NewDriveNative(cfg domain.EnvConfig) DriveNativeFactory
 		Application: cfg.Application,
 		Profile:     cfg.Profile,
 		Label:       cfg.Label,
+		VaultToken:  cfg.VaultToken,
 	})
 }
 
