@@ -9,20 +9,20 @@ VBUILD 				:= $(or ${VBUILD}, 0)
 VREV 				:= $(or ${VREV}, ${GIT_LAST_COMMIT})
 VERSION				:= "$(VMAJOR_MINOR).$(VBUILD).$(shell echo ${VREV} | cut -c 1-8)"
 
-all: help
+default: bin
 
-build: build_alpine build_linux build_osx
+clean:
+	@rm -rf output/
 
-build_alpine:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.version=$(VERSION)" -a -installsuffix cgo -o release/alpine/gcs cmd/main.go
+test: 
+	@cd internal && go test -count=1 -cover $(PKG_LIST_ALL_TESTS)
 
-build_linux:
-	GOOS=linux GOARCH=amd64 go build -ldflags "-X main.version=$(VERSION)" -o release/linux/gcs cmd/main.go
+bin: 
+	@VERSION=$(VERSION) sh -c "'$(PWD)/scripts/build.sh'"
 
-build_osx:
-	GOOS=darwin go build -ldflags "-X main.version=$(VERSION)" -o release/osx/gcs cmd/main.go
+dist:
+	@sh -c "'$(PWD)/scripts/dist.sh'"
 
-help:
-	@echo 'Usage: '
-	@echo ''
-	@echo 'make build'
+.NOTPARALLEL:
+
+.PHONY: clean test bin
