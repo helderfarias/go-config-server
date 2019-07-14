@@ -12,7 +12,7 @@ func AuthApiKey(cfg domain.SpringCloudConfig) echo.MiddlewareFunc {
 			Skipper: func(echo.Context) bool {
 				return !cfg.Security.APIKey.Enabled
 			},
-			KeyLookup: "query:apikey",
+			KeyLookup: cfg.Security.APIKey.KeyLookup,
 			Validator: func(key string, c echo.Context) (bool, error) {
 				return key == cfg.Security.APIKey.Token, nil
 			},

@@ -13,8 +13,9 @@ type SpringCloudConfig struct {
 			Password string `yml:"password"`
 		} `yml:"basic"`
 		APIKey struct {
-			Enabled bool   `yml:"enabled"`
-			Token   string `yml:"token"`
+			Enabled   bool   `yml:"enabled"`
+			KeyLookup string `yml:"keylookup"`
+			Token     string `yml:"token"`
 		} `yml:"apikey"`
 	} `yml:"security"`
 

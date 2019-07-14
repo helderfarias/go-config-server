@@ -9,6 +9,7 @@ security:
     password: admin00
   apikey:
     enabled: false
+    keylookup: "header:apikey"
     token: 9a0697eb595309177ff10336f2801b5861833ac36315b7bbda3fd2e1619797d9
 
 encrypt:
