@@ -9,7 +9,9 @@ VBUILD 				:= $(or ${VBUILD}, 0)
 VREV 				:= $(or ${VREV}, ${GIT_LAST_COMMIT})
 VERSION				:= "$(VMAJOR_MINOR).$(VBUILD).$(shell echo ${VREV} | cut -c 1-8)"
 
-default: bin
+default: all
+
+all: clean test bin dist
 
 clean:
 	@rm -rf output/
@@ -23,6 +25,9 @@ bin:
 dist:
 	@sh -c "'$(PWD)/scripts/dist.sh'"
 
+publish:
+	@sh -c "'$(PWD)/scripts/publish.sh'"
+
 .NOTPARALLEL:
 
-.PHONY: clean test bin
+.PHONY: clean test bin dist publish

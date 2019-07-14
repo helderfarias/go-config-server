@@ -7,6 +7,7 @@ LD_FLAGS=${LD_FLAGS:-"-X main.version=$VERSION"}
 CGO_ENABLED=${CGO_ENABLED:-0}
 
 # Deps!
+echo
 echo "==> Download deps...: $XC_OS/$XC_ARCH "
 go mod download
 

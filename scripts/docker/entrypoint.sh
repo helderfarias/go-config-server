@@ -34,6 +34,6 @@ file_env() {
   unset "$fileVar"
 }
 
-file_env 'NAME'
+file_env 'CONFIG'
 
-/bin/gcs
+/bin/gcs -config ${CONFIG}
