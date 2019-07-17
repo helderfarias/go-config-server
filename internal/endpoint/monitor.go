@@ -15,6 +15,10 @@ func (a *Api) MonitorRefreshToken(c echo.Context) error {
 		return err
 	}
 
+	if c.Request().Header.Get("X-Github-Event") == "ping" {
+		return c.NoContent(http.StatusOK)
+	}
+
 	if c.Request().Header.Get("X-Github-Event") != "push" {
 		logrus.Error("Evento esperado:", c.Request().Header.Get("X-Github-Event"))
 		return c.JSON(http.StatusBadRequest, "Evento não permitido")
