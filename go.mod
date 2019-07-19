@@ -3,6 +3,7 @@ module github.com/helderfarias/go-config-server
 go 1.12
 
 require (
+	github.com/dimiro1/health v0.0.0-20180724185659-5a1598839344
 	github.com/guregu/null v3.4.0+incompatible
 	github.com/hashicorp/vault/api v1.0.2
 	github.com/helderfarias/sqlx-wrapper v1.0.8

@@ -17,6 +17,7 @@ func Register(e *echo.Echo, cfg domain.SpringCloudConfig) {
 
 	e.GET("/:application/:profile", api.ApplicationProfile)
 	e.GET("/:application/:profile/:label", api.ApplicationProfile)
+	e.GET("/health", api.Health)
 	e.POST("/encrypt", api.Encrypt)
 	e.POST("/decrypt", api.Decrypt)
 	e.POST("/monitor", api.MonitorRefreshToken)
