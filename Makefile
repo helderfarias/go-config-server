@@ -13,7 +13,7 @@ default: all
 all: clean test bin dist
 
 clean:
-	@rm -rf target/
+	@rm -rf target
 
 test:
 	@sh -c "'$(PWD)/scripts/unit.test.sh'"
