@@ -16,10 +16,10 @@ all: clean test bin dist
 clean:
 	@rm -rf output/
 
-test: 
-	@cd internal && go test -count=1 -cover $(PKG_LIST_ALL_TESTS)
+test:
+	@sh -c "'$(PWD)/scripts/unit.test.sh'"
 
-bin: 
+bin:
 	@VERSION=$(VERSION) sh -c "'$(PWD)/scripts/build.sh'"
 
 dist:

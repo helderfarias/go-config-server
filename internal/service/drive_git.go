@@ -2,6 +2,7 @@ package service
 
 import (
 	"fmt"
+	"os"
 	"strings"
 
 	"github.com/helderfarias/go-config-server/internal/domain"
@@ -77,16 +78,27 @@ func (e *gitDriveNative) clone() (string, *git.Repository, error) {
 	repo, err := git.PlainClone(directory, false, options)
 
 	if err == git.ErrRepositoryAlreadyExists {
-		repo, err := git.PlainOpen(directory)
+		pRepo, err := git.PlainOpen(directory)
 		if err != nil {
-			return directory, repo, err
+			return "", nil, err
 		}
 
-		repo, err = e.forcePullIf(repo)
-		return directory, repo, err
+		uRepo, err := e.forcePullIf(pRepo)
+		if err == nil {
+			return directory, uRepo, err
+		}
+
+		if err := os.RemoveAll(directory); err != nil {
+			return "", nil, err
+		}
+
+		fRepo, err := git.PlainClone(directory, false, options)
+		return directory, fRepo, err
 	}
 
-	repo, err = e.forcePullIf(repo)
+	if err != nil {
+		return "", nil, err
+	}
 
 	return directory, repo, err
 }
@@ -99,10 +111,11 @@ func (e *gitDriveNative) forcePullIf(repo *git.Repository) (*git.Repository, err
 
 	work, err := repo.Worktree()
 	if err != nil {
-		return repo, err
+		return nil, err
 	}
 
-	if err := work.Pull(&git.PullOptions{RemoteName: "origin"}); err == git.NoErrAlreadyUpToDate {
+	err = work.Pull(&git.PullOptions{RemoteName: "origin", Force: true})
+	if err == git.NoErrAlreadyUpToDate {
 		return repo, nil
 	}
 
