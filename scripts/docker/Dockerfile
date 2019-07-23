@@ -13,9 +13,7 @@ ADD scripts/docker/entrypoint.sh entrypoint.sh
 RUN strip --strip-unneeded /root/gcs_linux
 RUN upx /root/gcs_linux
 
-FROM alpine:3.7
-RUN apk add -U tzdata curl && cp /usr/share/zoneinfo/America/Argentina/Buenos_Aires /etc/localtime
-RUN apk update && apk add ca-certificates && rm -rf /var/cache/apk/*
+FROM helderfarias/alpine:3.7
 COPY --from=builder /root/gcs_linux /bin/gcs
 COPY --from=builder /root/entrypoint.sh /bin/entrypoint.sh
 RUN chmod +x /bin/gcs
