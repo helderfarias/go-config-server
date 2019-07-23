@@ -1,5 +1,4 @@
 # General
-PKG_LIST_ALL_TESTS	:= $(shell go list ./... | grep -v /vendor | grep -v /test)
 GIT_BRANCH			:= $(shell git symbolic-ref HEAD | sed -e 's/^refs\/heads\///')
 GIT_LAST_COMMIT		:= $(shell git rev-parse --short HEAD)
 
@@ -14,7 +13,7 @@ default: all
 all: clean test bin dist
 
 clean:
-	@rm -rf output/
+	@rm -rf target/
 
 test:
 	@sh -c "'$(PWD)/scripts/unit.test.sh'"
