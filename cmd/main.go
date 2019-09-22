@@ -11,9 +11,7 @@ import (
 
 	"github.com/helderfarias/go-config-server/internal/domain"
 	"github.com/helderfarias/go-config-server/internal/endpoint"
-	mwi "github.com/helderfarias/go-config-server/internal/middleware"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 	"github.com/sirupsen/logrus"
 	"github.com/tylerb/graceful"
 	"gopkg.in/yaml.v2"
@@ -30,12 +28,6 @@ func main() {
 
 	e := echo.New()
 	e.Server.Addr = fmt.Sprintf("%s:%d", cfg.Server.Host, cfg.Server.Port)
-	e.Use(middleware.Logger())
-	e.Use(middleware.Recover())
-	e.Use(middleware.CORS())
-	e.Use(middleware.Secure())
-	e.Use(mwi.AuthBasic(cfg))
-	e.Use(mwi.AuthApiKey(cfg))
 
 	logrus.Infof("⇨ http server started on %s\n", e.Server.Addr)
 
