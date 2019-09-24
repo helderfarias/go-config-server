@@ -3,4 +3,10 @@
 # Build!
 echo
 echo "-- Building release docker images for version $VERSION --"
-docker build --no-cache -t helderfarias/gcs${VERSION} -f "scripts/docker/Dockerfile" .
+
+RELEASE=""
+if [ ! -z $VERSION ]; then
+    RELEASE=":$VERSION"
+fi
+
+docker build --no-cache -t helderfarias/gcs${RELEASE} -f "scripts/docker/Dockerfile" .

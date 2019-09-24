@@ -22,10 +22,10 @@ bin:
 	@VERSION=$(VERSION) sh -c "'$(PWD)/scripts/build.sh'"
 
 dist:
-	@sh -c "'$(PWD)/scripts/dist.sh'"
+	@VERSION=$(VERSION) sh -c "'$(PWD)/scripts/dist.sh'"
 
 publish:
-	@sh -c "'$(PWD)/scripts/publish.sh'"
+	@VERSION=$(VERSION) sh -c "'$(PWD)/scripts/publish.sh'"
 
 .NOTPARALLEL:
 
