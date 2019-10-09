@@ -3,12 +3,11 @@ package middleware
 import (
 	"github.com/helderfarias/go-config-server/internal/domain"
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 )
 
 func AuthApiKey(cfg domain.SpringCloudConfig) echo.MiddlewareFunc {
-	return middleware.KeyAuthWithConfig(
-		middleware.KeyAuthConfig{
+	return KeyAuthWithConfig(
+		KeyAuthConfig{
 			Skipper: func(echo.Context) bool {
 				return !cfg.Security.APIKey.Enabled
 			},
