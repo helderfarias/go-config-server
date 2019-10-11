@@ -2,7 +2,6 @@ package middleware
 
 import (
 	"errors"
-	"log"
 	"net/http"
 	"strings"
 
@@ -81,7 +80,6 @@ func KeyAuthWithConfig(config KeyAuthConfig) echo.MiddlewareFunc {
 	// Initialize
 	parts := strings.Split(config.KeyLookup, ":")
 	extractor := keyFromHeader(parts[1], config.AuthScheme)
-	log.Println(parts)
 	switch parts[0] {
 	case "query":
 		extractor = keyFromQuery(parts[1])
