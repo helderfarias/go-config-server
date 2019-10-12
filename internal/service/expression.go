@@ -1,6 +1,7 @@
 package service
 
 import (
+	"encoding/base64"
 	"strings"
 
 	"github.com/sirupsen/logrus"
@@ -34,6 +35,25 @@ func (e *parseExpression) eval() map[string]interface{} {
 }
 
 func (e *parseExpression) decode(source string) string {
+	if strings.HasPrefix(source, "{cipher-base64}") {
+		content := strings.ReplaceAll(source, "{cipher-base64}", "")
+		content = strings.ReplaceAll(content, "\"", "")
+
+		decrypted, err := e.cryptService.Decrypt(string(content))
+		if err != nil {
+			logrus.Error(err)
+			return source
+		}
+
+		decoded, err := base64.StdEncoding.DecodeString(string(decrypted))
+		if err != nil {
+			logrus.Error(err)
+			return ""
+		}
+
+		return string(decoded)
+	}
+
 	if strings.HasPrefix(source, "{cipher}") {
 		content := strings.ReplaceAll(source, "{cipher}", "")
 		content = strings.ReplaceAll(content, "\"", "")
